@@ -75,7 +75,7 @@ PreModel <- randomForest(trainingDataSeg$classe ~. , data = trainingDataSeg)
 According to the result, using Random Forest technique can give 99% accuracy rate. Thus,
 this method is used to apply on the 20 different test cases.
 
-Definition of Out of Sample Error
+***Definition of Out of Sample Error***
 It is statistics speak which in most cases means "using past data to make forecasts of the future". "In sample" refers to the data that you have, and "out of sample" to the data you don't have but want to forecast or estimate.
 
 **Decision Tree**
@@ -83,6 +83,7 @@ It is statistics speak which in most cases means "using past data to make foreca
 DTTrainingMod <- rpart(classe ~ ., data=trainingDataSeg, method="class")
 DTPredict <- predict(DTTrainingMod, testingDataSeg, type = "class")
 rpart.plot(DTTrainingMod, main="Classification Tree", extra=102, under=TRUE, faclen=0)
+print(confusionMatrix(DTPredict, testingDataSeg$classe))
 ```
 
 **Random Forest**
@@ -90,9 +91,11 @@ rpart.plot(DTTrainingMod, main="Classification Tree", extra=102, under=TRUE, fac
 ModelPrediction <- predict(PreModel, newdata = testingDataSeg)
 print(confusionMatrix(ModelPrediction, testingDataSeg$classe))
 ```
+***Out of Sample Error***
+Out Sample of Error (1 - Accuracy Rate) is shown 0.007 or 0.7%
 
 **Conclusion:**
-According to the result, using Random Forest technique can give 99% accuracy rate. However, the out sample of error (1 - Accuracy Rate) is shown 0.005%. Thus, Random forest is chooses.
+According to the result, using Random Forest technique can give 99.3% accuracy rate which is better than Decision Tree where the accuracy rate of Decision Tree is 68.5%. However, the Out Sample of Error (1 - Accuracy Rate) is shown 0.007 or 0.7%. Thus, Random forest is chooses.
 
 #### 8. Applying Prediction Model to 20 cases
 Below show the result of 20 different test cases
