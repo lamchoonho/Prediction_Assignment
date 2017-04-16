@@ -25,10 +25,12 @@ Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible t
 http://groupware.les.inf.puc-rio.br/har
 
 #### 1. Loading necessary library
-Loading necessary library for data reading and applying Random Forest machine learning technique
+Loading necessary library for data reading and applying Decision Tree & Random Forest machine learning technique
 ```{r}
 library(caret)
 library(randomForest)
+library(rpart)
+library(rpart.plot)
 ```
 
 #### 2. Retrieve Data
@@ -69,13 +71,28 @@ Applying and train Random Forest machine learning technique to 70% training data
 PreModel <- randomForest(trainingDataSeg$classe ~. , data = trainingDataSeg)
 ```
 
-#### 7. Prediction Model Assessment
+#### 7. Prediction Model, Accuracy Rate and Out of Sample Error
 According to the result, using Random Forest technique can give 99% accuracy rate. Thus,
 this method is used to apply on the 20 different test cases.
+
+Definition of Out of Sample Error
+It is statistics speak which in most cases means "using past data to make forecasts of the future". "In sample" refers to the data that you have, and "out of sample" to the data you don't have but want to forecast or estimate.
+
+**Decision Tree**
+```{r}
+DTTrainingMod <- rpart(classe ~ ., data=trainingDataSeg, method="class")
+DTPredict <- predict(DTTrainingMod, testingDataSeg, type = "class")
+rpart.plot(DTTrainingMod, main="Classification Tree", extra=102, under=TRUE, faclen=0)
+```
+
+**Random Forest**
 ```{r}
 ModelPrediction <- predict(PreModel, newdata = testingDataSeg)
 print(confusionMatrix(ModelPrediction, testingDataSeg$classe))
 ```
+
+**Conclusion:**
+According to the result, using Random Forest technique can give 99% accuracy rate. However, the out sample of error (1 - Accuracy Rate) is shown 0.005%. Thus, Random forest is chooses.
 
 #### 8. Applying Prediction Model to 20 cases
 Below show the result of 20 different test cases

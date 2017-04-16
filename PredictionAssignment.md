@@ -18,7 +18,7 @@ Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible t
 http://groupware.les.inf.puc-rio.br/har
 
 #### 1. Loading necessary library
-Loading necessary library for data reading and applying Random Forest machine learning technique
+Loading necessary library for data reading and applying Decision Tree & Random Forest machine learning technique
 
 ```r
 library(caret)
@@ -61,6 +61,22 @@ library(randomForest)
 ## The following object is masked from 'package:ggplot2':
 ## 
 ##     margin
+```
+
+```r
+library(rpart)
+```
+
+```
+## Warning: package 'rpart' was built under R version 3.3.3
+```
+
+```r
+library(rpart.plot)
+```
+
+```
+## Warning: package 'rpart.plot' was built under R version 3.3.3
 ```
 
 #### 2. Retrieve Data
@@ -106,9 +122,24 @@ Applying and train Random Forest machine learning technique to 70% training data
 PreModel <- randomForest(trainingDataSeg$classe ~. , data = trainingDataSeg)
 ```
 
-#### 7. Prediction Model Assessment
+#### 7. Prediction Model, Accuracy Rate and Out of Sample Error
 According to the result, using Random Forest technique can give 99% accuracy rate. Thus,
 this method is used to apply on the 20 different test cases.
+
+Definition of Out of Sample Error
+It is statistics speak which in most cases means "using past data to make forecasts of the future". "In sample" refers to the data that you have, and "out of sample" to the data you don't have but want to forecast or estimate.
+
+**Decision Tree**
+
+```r
+DTTrainingMod <- rpart(classe ~ ., data=trainingDataSeg, method="class")
+DTPredict <- predict(DTTrainingMod, testingDataSeg, type = "class")
+rpart.plot(DTTrainingMod, main="Classification Tree", extra=102, under=TRUE, faclen=0)
+```
+
+![](PredictionAssignment_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+
+**Random Forest**
 
 ```r
 ModelPrediction <- predict(PreModel, newdata = testingDataSeg)
@@ -120,34 +151,37 @@ print(confusionMatrix(ModelPrediction, testingDataSeg$classe))
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1673    6    0    0    0
-##          B    1 1132    7    0    0
-##          C    0    1 1019   12    0
-##          D    0    0    0  952    3
-##          E    0    0    0    0 1079
+##          A 1673    7    0    0    0
+##          B    0 1130   11    0    0
+##          C    0    2 1014   13    3
+##          D    0    0    1  951    1
+##          E    1    0    0    0 1078
 ## 
 ## Overall Statistics
-##                                           
-##                Accuracy : 0.9949          
-##                  95% CI : (0.9927, 0.9966)
-##     No Information Rate : 0.2845          
-##     P-Value [Acc > NIR] : < 2.2e-16       
-##                                           
-##                   Kappa : 0.9936          
-##  Mcnemar's Test P-Value : NA              
+##                                          
+##                Accuracy : 0.9934         
+##                  95% CI : (0.991, 0.9953)
+##     No Information Rate : 0.2845         
+##     P-Value [Acc > NIR] : < 2.2e-16      
+##                                          
+##                   Kappa : 0.9916         
+##  Mcnemar's Test P-Value : NA             
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9994   0.9939   0.9932   0.9876   0.9972
-## Specificity            0.9986   0.9983   0.9973   0.9994   1.0000
-## Pos Pred Value         0.9964   0.9930   0.9874   0.9969   1.0000
-## Neg Pred Value         0.9998   0.9985   0.9986   0.9976   0.9994
+## Sensitivity            0.9994   0.9921   0.9883   0.9865   0.9963
+## Specificity            0.9983   0.9977   0.9963   0.9996   0.9998
+## Pos Pred Value         0.9958   0.9904   0.9826   0.9979   0.9991
+## Neg Pred Value         0.9998   0.9981   0.9975   0.9974   0.9992
 ## Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839
-## Detection Rate         0.2843   0.1924   0.1732   0.1618   0.1833
-## Detection Prevalence   0.2853   0.1937   0.1754   0.1623   0.1833
-## Balanced Accuracy      0.9990   0.9961   0.9953   0.9935   0.9986
+## Detection Rate         0.2843   0.1920   0.1723   0.1616   0.1832
+## Detection Prevalence   0.2855   0.1939   0.1754   0.1619   0.1833
+## Balanced Accuracy      0.9989   0.9949   0.9923   0.9931   0.9980
 ```
+
+**Conclusion:**
+According to the result, using Random Forest technique can give 99% accuracy rate. However, the out sample of error (1 - Accuracy Rate) is shown 0.005%. Thus, Random forest is chooses.
 
 #### 8. Applying Prediction Model to 20 cases
 Below show the result of 20 different test cases
