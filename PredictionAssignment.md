@@ -107,6 +107,7 @@ CleanTrainingData <- CleanTrainingData[,-(1:6)]
 ```
 
 #### 5. Segmented Data into Training Data and Test Data (Cross Validation Method)
+#### Cross Validation Method
 Segregated to 70% training dataset and 30% testing dataset of cleaned training dataset
 
 ```r
@@ -127,6 +128,7 @@ According to the result, using Random Forest technique can give 99% accuracy rat
 this method is used to apply on the 20 different test cases.
 
 ***Definition of Out of Sample Error***
+
 It is statistics speak which in most cases means "using past data to make forecasts of the future". "In sample" refers to the data that you have, and "out of sample" to the data you don't have but want to forecast or estimate.
 
 **Decision Tree**
@@ -148,36 +150,36 @@ print(confusionMatrix(DTPredict, testingDataSeg$classe))
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1548  247    9   92   33
-##          B   44  599   86   38   71
-##          C   37  102  837  163  133
-##          D   14   79   69  619   66
-##          E   31  112   25   52  779
+##          A 1475  178   11   56   23
+##          B   58  693   72   84   89
+##          C   42  140  876  154  140
+##          D   65   80   56  602   54
+##          E   34   48   11   68  776
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.7446          
-##                  95% CI : (0.7333, 0.7557)
+##                Accuracy : 0.7514          
+##                  95% CI : (0.7402, 0.7624)
 ##     No Information Rate : 0.2845          
 ##     P-Value [Acc > NIR] : < 2.2e-16       
 ##                                           
-##                   Kappa : 0.6754          
+##                   Kappa : 0.6852          
 ##  Mcnemar's Test P-Value : < 2.2e-16       
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9247   0.5259   0.8158   0.6421   0.7200
-## Specificity            0.9095   0.9496   0.9105   0.9537   0.9542
-## Pos Pred Value         0.8025   0.7148   0.6580   0.7308   0.7798
-## Neg Pred Value         0.9681   0.8930   0.9590   0.9315   0.9380
+## Sensitivity            0.8811   0.6084   0.8538   0.6245   0.7172
+## Specificity            0.9364   0.9362   0.9020   0.9482   0.9665
+## Pos Pred Value         0.8462   0.6958   0.6479   0.7025   0.8282
+## Neg Pred Value         0.9520   0.9088   0.9669   0.9280   0.9382
 ## Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839
-## Detection Rate         0.2630   0.1018   0.1422   0.1052   0.1324
-## Detection Prevalence   0.3278   0.1424   0.2161   0.1439   0.1698
-## Balanced Accuracy      0.9171   0.7378   0.8631   0.7979   0.8371
+## Detection Rate         0.2506   0.1178   0.1489   0.1023   0.1319
+## Detection Prevalence   0.2962   0.1692   0.2297   0.1456   0.1592
+## Balanced Accuracy      0.9087   0.7723   0.8779   0.7863   0.8418
 ```
 
-**Random Forest**
+#### Random Forest
 
 ```r
 ModelPrediction <- predict(PreModel, newdata = testingDataSeg)
@@ -189,38 +191,39 @@ print(confusionMatrix(ModelPrediction, testingDataSeg$classe))
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1670    7    0    0    0
-##          B    4 1130    5    0    0
-##          C    0    2 1020    7    2
-##          D    0    0    1  955    2
-##          E    0    0    0    2 1078
+##          A 1672    4    0    0    0
+##          B    2 1130   12    0    0
+##          C    0    5 1014   14    1
+##          D    0    0    0  950    2
+##          E    0    0    0    0 1079
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.9946          
-##                  95% CI : (0.9923, 0.9963)
+##                Accuracy : 0.9932          
+##                  95% CI : (0.9908, 0.9951)
 ##     No Information Rate : 0.2845          
 ##     P-Value [Acc > NIR] : < 2.2e-16       
 ##                                           
-##                   Kappa : 0.9931          
+##                   Kappa : 0.9914          
 ##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9976   0.9921   0.9942   0.9907   0.9963
-## Specificity            0.9983   0.9981   0.9977   0.9994   0.9996
-## Pos Pred Value         0.9958   0.9921   0.9893   0.9969   0.9981
-## Neg Pred Value         0.9990   0.9981   0.9988   0.9982   0.9992
+## Sensitivity            0.9988   0.9921   0.9883   0.9855   0.9972
+## Specificity            0.9991   0.9971   0.9959   0.9996   1.0000
+## Pos Pred Value         0.9976   0.9878   0.9807   0.9979   1.0000
+## Neg Pred Value         0.9995   0.9981   0.9975   0.9972   0.9994
 ## Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839
-## Detection Rate         0.2838   0.1920   0.1733   0.1623   0.1832
-## Detection Prevalence   0.2850   0.1935   0.1752   0.1628   0.1835
-## Balanced Accuracy      0.9980   0.9951   0.9959   0.9950   0.9979
+## Detection Rate         0.2841   0.1920   0.1723   0.1614   0.1833
+## Detection Prevalence   0.2848   0.1944   0.1757   0.1618   0.1833
+## Balanced Accuracy      0.9989   0.9946   0.9921   0.9925   0.9986
 ```
-***Out of Sample Error***
-Out Sample of Error (1 - Accuracy Rate) is shown 0.007 or 0.7%
+#### Out of Sample Error
+Out of Sample Error (1 - Accuracy Rate) is shown 0.007 or 0.7%
 
 **Conclusion:**
+
 According to the result, using Random Forest technique can give 99.3% accuracy rate which is better than Decision Tree where the accuracy rate of Decision Tree is 68.5%. However, the Out Sample of Error (1 - Accuracy Rate) is shown 0.007 or 0.7%. Thus, Random forest is chooses.
 
 #### 8. Applying Prediction Model to 20 cases

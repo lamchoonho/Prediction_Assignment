@@ -58,6 +58,7 @@ CleanTrainingData <- CleanTrainingData[,-(1:6)]
 ```
 
 #### 5. Segmented Data into Training Data and Test Data (Cross Validation Method)
+#### Cross Validation Method
 Segregated to 70% training dataset and 30% testing dataset of cleaned training dataset
 ```{r}
 TrainDataPart <- createDataPartition(y = CleanTrainingData$classe, p = 0.7, list = FALSE)
@@ -76,6 +77,7 @@ According to the result, using Random Forest technique can give 99% accuracy rat
 this method is used to apply on the 20 different test cases.
 
 ***Definition of Out of Sample Error***
+
 It is statistics speak which in most cases means "using past data to make forecasts of the future". "In sample" refers to the data that you have, and "out of sample" to the data you don't have but want to forecast or estimate.
 
 **Decision Tree**
@@ -86,15 +88,16 @@ rpart.plot(DTTrainingMod, main="Classification Tree", extra=102, under=TRUE, fac
 print(confusionMatrix(DTPredict, testingDataSeg$classe))
 ```
 
-**Random Forest**
+#### Random Forest
 ```{r}
 ModelPrediction <- predict(PreModel, newdata = testingDataSeg)
 print(confusionMatrix(ModelPrediction, testingDataSeg$classe))
 ```
-***Out of Sample Error***
-Out Sample of Error (1 - Accuracy Rate) is shown 0.007 or 0.7%
+#### Out of Sample Error
+Out of Sample Error (1 - Accuracy Rate) is shown 0.007 or 0.7%
 
 **Conclusion:**
+
 According to the result, using Random Forest technique can give 99.3% accuracy rate which is better than Decision Tree where the accuracy rate of Decision Tree is 68.5%. However, the Out Sample of Error (1 - Accuracy Rate) is shown 0.007 or 0.7%. Thus, Random forest is chooses.
 
 #### 8. Applying Prediction Model to 20 cases
