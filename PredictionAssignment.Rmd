@@ -1,0 +1,84 @@
+---
+title: "PREDICTION ASSIGNMENT: QUANTIFYING PERFORMANCE OF EXERCISE"
+author: "LAM CHOON HO"
+date: "15 APR 2017"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## TITLE: PREDICTION ASSIGNMENT: QUANTIFYING PERFORMANCE OF EXERCISE
+AUTHOR: LAM CHOON HO
+Date: 15 APR 2017
+
+#### Executive Summary
+The objective of this project is to quantifying performance of exercse with using prediction model on 20 different test cases. This project is used Random Forest machine learning technique 
+for prediction task.
+
+#### Background
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
+
+#### Citation
+http://groupware.les.inf.puc-rio.br/har
+
+#### 1. Loading necessary library
+Loading necessary library for data reading and applying Random Forest machine learning technique
+```{r}
+library(caret)
+library(randomForest)
+```
+
+#### 2. Retrieve Data
+Getting the source of training data and testing data.
+```{r}
+pmlTrainingDataURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+pmlTestingDataURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+```
+
+#### 3. Preprocessing Data
+Change empty value and invalid value to NA
+```{r}
+pmlTrainingData <- read.csv(url(pmlTrainingDataURL), na.strings=c("NA","#DIV/0!",""))
+pmlTestingData <- read.csv(url(pmlTestingDataURL), na.strings=c("NA","#DIV/0!",""))
+```
+
+#### 4. Data Cleaning
+Remove Near-Zero-Value (NZV), NA, Empty Value and first 6 columes
+```{r}
+NearZeroVal <- nzv(pmlTrainingData, saveMetrics = T)
+CleanTrainingData <- pmlTrainingData[, names(pmlTrainingData)[!(NearZeroVal[, 4])]]
+NAEmptyVal <- sapply(CleanTrainingData, function(x) !(any(is.na(x) | x == "")))
+CleanTrainingData <- CleanTrainingData[, names(CleanTrainingData)[NAEmptyVal]]
+CleanTrainingData <- CleanTrainingData[,-(1:6)]
+```
+
+#### 5. Segmented Data into Training Data and Test Data (Cross Validation Method)
+Segregated to 70% training dataset and 30% testing dataset of cleaned training dataset
+```{r}
+TrainDataPart <- createDataPartition(y = CleanTrainingData$classe, p = 0.7, list = FALSE)
+trainingDataSeg <- CleanTrainingData[TrainDataPart,]
+testingDataSeg <- CleanTrainingData[-TrainDataPart,]
+```
+
+#### 6. Constructing Prediction Model with using Random Forest
+Applying and train Random Forest machine learning technique to 70% training dataset
+```{r}
+PreModel <- randomForest(trainingDataSeg$classe ~. , data = trainingDataSeg)
+```
+
+#### 7. Prediction Model Assessment
+According to the result, using Random Forest technique can give 99% accuracy rate. Thus,
+this method is used to apply on the 20 different test cases.
+```{r}
+ModelPrediction <- predict(PreModel, newdata = testingDataSeg)
+print(confusionMatrix(ModelPrediction, testingDataSeg$classe))
+```
+
+#### 8. Applying Prediction Model to 20 cases
+Below show the result of 20 different test cases
+```{r}
+print(predict(PreModel, newdata = pmlTestingData))
+```
